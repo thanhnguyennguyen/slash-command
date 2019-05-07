@@ -34,7 +34,7 @@ func slashCommandHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	switch s.Command {
-	case "/slackbot":
+	case "/testbot":
 		params := &slack.Msg{Text: s.Text}
 		response := fmt.Sprintf("You asked for the me for %v", params.Text)
 		w.Write([]byte(response))
