@@ -2,23 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"github.com/nlopes/slack"
-	"log"
 	"net/http"
 	"os"
 )
 
 func main() {
-	err := godotenv.Load("env.env")
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
 	http.HandleFunc("/receive", slashCommandHandler)
-
 	fmt.Println("[INFO] Server listening")
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":" + os.Getenv("PORT"), nil)
 }
 
 func slashCommandHandler(w http.ResponseWriter, r *http.Request) {
@@ -27,7 +19,6 @@ func slashCommandHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-
 	if !s.ValidateToken(os.Getenv("SLACK_VERIFICATION_TOKEN")) {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -36,7 +27,7 @@ func slashCommandHandler(w http.ResponseWriter, r *http.Request) {
 	switch s.Command {
 	case "/testbot":
 		params := &slack.Msg{Text: s.Text}
-		response := fmt.Sprintf("You asked for the me for %v", params.Text)
+		response := fmt.Sprintf(s.UserID + ", you asked for the me for %v", params.Text)
 		w.Write([]byte(response))
 
 	default:
