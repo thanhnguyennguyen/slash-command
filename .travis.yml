@@ -26,5 +26,5 @@ notifications:
 # failing test, we want to see both. Configure golangci-lint with a
 # .golangci.yml file at the top level of your repo.
 script:
-  - env GO111MODULE=on go build ./
+  - env GO111MODULE=on make
   - env GO111MODULE=on go test ./
